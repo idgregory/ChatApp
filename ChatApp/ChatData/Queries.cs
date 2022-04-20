@@ -25,8 +25,20 @@ namespace ChatApp.ChatData
         {
             using (IDbConnection db = new SqlConnection(Globals.ConnString))
             {
-                string qry = $"select iid message from users where iid = {UserID}";
-                return (await db.QueryAsync<Message>(qry, commandType: CommandType.Text)).ToList();
+                string qry = 
+                    $@"
+                        select 
+	                        distinct msg.iid,
+	                        msg.fk_users_from, 
+	                        msg.fk_users_to, 
+	                        (select username from users where iid = msg.iid) as SenderUsername,
+	                        message
+                        from messages msg
+                        join
+                        users u on u.iid = msg.fk_users_from or u.iid = msg.fk_users_to
+                        where (msg.fk_users_from = {UserID} or msg.fk_users_from = {RecpID}) and (msg.fk_users_to = {UserID} or msg.fk_users_to = {RecpID})";
+                List<Message> msgs = (await db.QueryAsync<Message>(qry, commandType: CommandType.Text)).ToList();
+                return msgs;
             }
         }
 

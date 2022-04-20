@@ -35,12 +35,22 @@ namespace ChatApp
             CurrRecipient = RecipientList[0];
         }
 
+        private void LoadChatBox(List<Models.Message> msgs)
+        {
+            foreach(Models.Message msg in msgs)
+            {
+                ChatLogInput.Text += $"{msg.SenderUsername}: {msg.message} \r\n";
+            }
+        }
+
         private async void ChatWindow_Load(object sender, EventArgs e)
         {
             this.FormBorderStyle = FormBorderStyle.None;
             this.Dock = DockStyle.Fill;
             await LoadRecipientComboBox();
-            
+            List<Models.Message> MessageList = await Queries.LoadMessages(Globals.UserID, CurrRecipient.iid);
+            LoadChatBox(MessageList);
+
 
         }
 

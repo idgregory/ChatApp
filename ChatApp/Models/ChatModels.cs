@@ -17,6 +17,7 @@ namespace ChatApp.Models
         public int iid { get; set; }
         public int fk_users_from { get; set; }
         public int fk_users_to { get; set; }
+        public string SenderUsername { get; set; }
         public string message { get; set; }
     }
 }
