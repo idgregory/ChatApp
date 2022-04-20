@@ -21,6 +21,16 @@ namespace ChatApp.ChatData
             }
         }
 
+        public static async Task<string> GetUserName(int? id)
+        {
+            using (IDbConnection db = new SqlConnection(Globals.ConnString))
+            {
+                string qry = $"select username from users where iid = {id}";
+                List<string> usernames = (await db.QueryAsync<string>(qry, commandType: CommandType.Text)).ToList();
+                return usernames[0];
+            }
+        }
+
         public static async Task<List<Message>> LoadMessages(int? UserID, int? RecpID)
         {
             using (IDbConnection db = new SqlConnection(Globals.ConnString))
@@ -31,11 +41,11 @@ namespace ChatApp.ChatData
 	                        distinct msg.iid,
 	                        msg.fk_users_from, 
 	                        msg.fk_users_to, 
-	                        (select username from users where iid = msg.iid) as SenderUsername,
+	                        --(select username from users where iid = msg.fk_user_from) as SenderUsername,
 	                        message
                         from messages msg
                         join
-                        users u on u.iid = msg.fk_users_from or u.iid = msg.fk_users_to
+                        users u on u.iid = msg.fk_users_from
                         where (msg.fk_users_from = {UserID} or msg.fk_users_from = {RecpID}) and (msg.fk_users_to = {UserID} or msg.fk_users_to = {RecpID})";
                 List<Message> msgs = (await db.QueryAsync<Message>(qry, commandType: CommandType.Text)).ToList();
                 return msgs;

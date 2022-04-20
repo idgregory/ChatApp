@@ -89,6 +89,7 @@ namespace ChatApp
             this.RecipientComboBox.Name = "RecipientComboBox";
             this.RecipientComboBox.Size = new System.Drawing.Size(121, 21);
             this.RecipientComboBox.TabIndex = 5;
+            this.RecipientComboBox.SelectedIndexChanged += new System.EventHandler(this.RecipientComboBox_SelectedIndexChanged);
             // 
             // ChatWindow
             // 

@@ -35,11 +35,12 @@ namespace ChatApp
             CurrRecipient = RecipientList[0];
         }
 
-        private void LoadChatBox(List<Models.Message> msgs)
+        private async Task LoadChatBox(List<Models.Message> msgs)
         {
             foreach(Models.Message msg in msgs)
             {
-                ChatLogInput.Text += $"{msg.SenderUsername}: {msg.message} \r\n";
+                string username = await Queries.GetUserName(msg.fk_users_from);
+                ChatLogInput.Text += $"{username}: {msg.message} \r\n";
             }
         }
 
@@ -49,7 +50,7 @@ namespace ChatApp
             this.Dock = DockStyle.Fill;
             await LoadRecipientComboBox();
             List<Models.Message> MessageList = await Queries.LoadMessages(Globals.UserID, CurrRecipient.iid);
-            LoadChatBox(MessageList);
+            await LoadChatBox(MessageList);
 
 
         }
@@ -62,5 +63,12 @@ namespace ChatApp
 
         }
 
+        private async void RecipientComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ChatLogInput.Text = "";
+            CurrRecipient = RecipientList[RecipientComboBox.SelectedIndex];
+            List<Models.Message> MessageList = await Queries.LoadMessages(Globals.UserID, CurrRecipient.iid);
+            await LoadChatBox(MessageList);
+        }
     }
 }
