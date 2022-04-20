@@ -120,6 +120,7 @@ namespace ChatApp
             this.UsernameInput.Name = "UsernameInput";
             this.UsernameInput.Size = new System.Drawing.Size(442, 20);
             this.UsernameInput.TabIndex = 2;
+            this.UsernameInput.Text = "idgregory";
             // 
             // PasswordInput
             // 
@@ -128,6 +129,7 @@ namespace ChatApp
             this.PasswordInput.Name = "PasswordInput";
             this.PasswordInput.Size = new System.Drawing.Size(442, 20);
             this.PasswordInput.TabIndex = 3;
+            this.PasswordInput.Text = "1234";
             // 
             // Login
             // 

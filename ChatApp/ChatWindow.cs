@@ -14,28 +14,41 @@ namespace ChatApp
 {
     public partial class ChatWindow : Form
     {
+        private List<Recipient> RecipientList = null;
+        private Recipient CurrRecipient = null;
         public ChatWindow()
         {
             InitializeComponent();
         }
 
-        private async void LoadRecipientComboBox()
+        private async Task LoadMessagesFromCurrRecipient()
         {
-            List<Recipient> RecipientList = await Queries.GetListOfUsers(Globals.UserID);
+
+        }
+
+        private async Task LoadRecipientComboBox()
+        {
+            RecipientList = await Queries.GetListOfUsers(Globals.UserID);
             foreach (Recipient r in RecipientList)
                 RecipientComboBox.Items.Add(r.username);
             RecipientComboBox.SelectedIndex = 0;
+            CurrRecipient = RecipientList[0];
         }
 
         private async void ChatWindow_Load(object sender, EventArgs e)
         {
             this.FormBorderStyle = FormBorderStyle.None;
             this.Dock = DockStyle.Fill;
-            LoadRecipientComboBox();
+            await LoadRecipientComboBox();
+            
+
         }
 
-        private void SendBtn_Click(object sender, EventArgs e)
+        private async void SendBtn_Click(object sender, EventArgs e)
         {
+            string input = SendInput.Text;
+            if (string.IsNullOrEmpty(input) || string.IsNullOrWhiteSpace(input)) return;
+            await Queries.InsertMessage(Globals.UserID, CurrRecipient.iid, input);
 
         }
 
